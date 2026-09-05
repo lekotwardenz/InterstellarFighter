@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://dftdbb77pqyo1"]
+
+[ext_resource type="Texture2D" uid="uid://1vwj4nlfnjx1" path="res://assets/misc/HealthBar/healthbar-outline.png" id="1_5m1oq"]
+[ext_resource type="Script" uid="uid://d1v32sfwr803b" path="res://misc/heathbar/healthbar.gd" id="1_rlfjc"]
+[ext_resource type="Texture2D" uid="uid://bk2w7802g2xbd" path="res://assets/misc/HealthBar/healthbar-bg-1.png" id="2_rlfjc"]
+[ext_resource type="Texture2D" uid="uid://bgyxvosbb8jqt" path="res://assets/misc/HealthBar/healthbar-bg-2.png" id="3_h1ol2"]
+[ext_resource type="Texture2D" uid="uid://dxp55bpe8rk86" path="res://assets/misc/HealthBar/healthbar-red.png" id="4_fftxx"]
+[ext_resource type="Texture2D" uid="uid://dbbkyedkknoag" path="res://assets/misc/HealthBar/healthbar-green.png" id="5_k37oe"]
+[ext_resource type="Texture2D" uid="uid://skyq5ohhb3s1" path="res://assets/misc/HealthBar/healthbar-blue.png" id="6_wq887"]
+
+[node name="healthbar" type="Control" unique_id=1451531335 node_paths=PackedStringArray("greenHealth", "redHealth", "blueBar", "timer")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_rlfjc")
+greenHealth = NodePath("green")
+redHealth = NodePath("red")
+blueBar = NodePath("blue")
+timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="." unique_id=649663218]
+
+[node name="outline" type="TextureProgressBar" parent="." unique_id=561676255]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture_over = ExtResource("1_5m1oq")
+
+[node name="bg1" type="TextureProgressBar" parent="." unique_id=516396910]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 74.0
+offset_bottom = 42.0
+texture_under = ExtResource("2_rlfjc")
+
+[node name="bg2" type="TextureProgressBar" parent="." unique_id=1984462867]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 11.0
+offset_right = 45.0
+offset_bottom = 51.0
+texture_under = ExtResource("3_h1ol2")
+
+[node name="red" type="TextureProgressBar" parent="." unique_id=2138495908]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 74.0
+offset_bottom = 42.0
+value = 60.0
+texture_progress = ExtResource("4_fftxx")
+
+[node name="green" type="TextureProgressBar" parent="." unique_id=1717188604]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 74.0
+offset_bottom = 42.0
+value = 50.0
+texture_progress = ExtResource("5_k37oe")
+
+[node name="blue" type="TextureProgressBar" parent="." unique_id=698546054]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 11.0
+offset_right = 45.0
+offset_bottom = 51.0
+value = 50.0
+texture_progress = ExtResource("6_wq887")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://ds56qfuatw0xf"]
+
+[ext_resource type="PackedScene" uid="uid://ddkjuehkpb7f2" path="res://misc/lazer-beam/lazer_beam.tscn" id="2_isq1u"]
+
+[node name="Node2D" type="Node2D" unique_id=521555515]
+
+[node name="lazer_beam" parent="." unique_id=590820692 instance=ExtResource("2_isq1u")]
+position = Vector2(323, 158)

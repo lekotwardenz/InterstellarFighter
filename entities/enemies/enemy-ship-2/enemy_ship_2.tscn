@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://c72o6odf554ja"]
+
+[ext_resource type="Script" uid="uid://7m08utvdimn4" path="res://entities/enemies/enemy-ship-2/enemy_ship_2.gd" id="1_ytmm1"]
+[ext_resource type="Shader" uid="uid://dcnjfcki0qgvu" path="res://misc/effects/hit_flash.tres" id="2_bi2da"]
+[ext_resource type="Texture2D" uid="uid://8eixo4bnkmnd" path="res://assets/enemy-ships/enemy-ship-2.png" id="2_boyn5"]
+[ext_resource type="Script" uid="uid://dmr2qmynsbliu" path="res://entities/enemies/enemy-ship-2/default_state.gd" id="4_bi2da"]
+[ext_resource type="Script" uid="uid://86t3k84bvsg2" path="res://entities/enemies/enemy-ship-2/hurt_state.gd" id="5_62c0u"]
+
+[sub_resource type="Animation" id="Animation_321fu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_5eshn"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_62c0u"]
+_data = {
+&"RESET": SubResource("Animation_321fu"),
+&"hit_flash": SubResource("Animation_5eshn")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mw83g"]
+resource_local_to_scene = true
+shader = ExtResource("2_bi2da")
+shader_parameter/enabled = false
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bi2da"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_boyn5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ytmm1"]
+radius = 17.0
+height = 54.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ytmm1"]
+radius = 16.124516
+
+[node name="enemy-ship-2" type="CharacterBody2D" unique_id=802032767 node_paths=PackedStringArray("marker", "sprite", "hitFlash", "hitbox", "stateMachine", "defaultState", "hurtState")]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("1_ytmm1")
+marker = NodePath("Marker2D")
+score_value = 10
+sprite = NodePath("Sprite")
+hitFlash = NodePath("HitFlash")
+hitbox = NodePath("HitboxContainer")
+stateMachine = NodePath("LimboHSM")
+defaultState = NodePath("LimboHSM/DefaultState")
+hurtState = NodePath("LimboHSM/HurtState")
+metadata/_custom_type_script = "uid://juoyvqso43pp"
+
+[node name="HitFlash" type="AnimationPlayer" parent="." unique_id=248903788]
+libraries/ = SubResource("AnimationLibrary_62c0u")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=49120490]
+material = SubResource("ShaderMaterial_mw83g")
+sprite_frames = SubResource("SpriteFrames_bi2da")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=633904264]
+shape = SubResource("CapsuleShape2D_ytmm1")
+
+[node name="Marker2D" type="Marker2D" parent="." unique_id=2097575187]
+position = Vector2(0, 26)
+
+[node name="LimboHSM" type="LimboHSM" parent="." unique_id=758473012]
+
+[node name="DefaultState" type="LimboState" parent="LimboHSM" unique_id=507653842]
+script = ExtResource("4_bi2da")
+
+[node name="HurtState" type="LimboState" parent="LimboHSM" unique_id=1030391323]
+script = ExtResource("5_62c0u")
+
+[node name="HitboxContainer" type="Area2D" parent="." unique_id=633605383]
+collision_layer = 2
+collision_mask = 4
+
+[node name="Hitobx" type="CollisionShape2D" parent="HitboxContainer" unique_id=669388828]
+shape = SubResource("CircleShape2D_ytmm1")
+debug_color = Color(0.99215686, 0.003921569, 0, 0.41960785)

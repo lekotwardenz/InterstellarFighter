@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://krq4lh8rbv6d"]
+
+[ext_resource type="Script" uid="uid://crl7k3udtuhof" path="res://entities/enemies/enemy-bomber/enemy_bomber.gd" id="1_8gs3j"]
+[ext_resource type="Texture2D" uid="uid://d0sfme8lwkitv" path="res://assets/enemy-ships/enemy-bomber/enemy-bomber-1.png" id="2_8gs3j"]
+[ext_resource type="Shader" uid="uid://br5t4am4rpp8j" path="res://entities/enemies/enemy-bomber/enemy_bomber.gdshader" id="2_570wq"]
+[ext_resource type="Texture2D" uid="uid://b0hp6apbj8vb4" path="res://assets/enemy-ships/enemy-bomber/enemy-bomber-2.png" id="3_i8hcw"]
+[ext_resource type="Texture2D" uid="uid://dtbgffiooft36" path="res://assets/enemy-ships/enemy-bomber/enemy-bomber-3.png" id="4_1hxrf"]
+[ext_resource type="Texture2D" uid="uid://ddhk0xmij8l8c" path="res://assets/enemy-ships/enemy-bomber/enemy-bomber-4.png" id="5_xtb3p"]
+[ext_resource type="Script" uid="uid://drx0ts4lj5il4" path="res://entities/enemies/enemy-bomber/default_state.gd" id="6_i8hcw"]
+[ext_resource type="Script" uid="uid://c53ok37bshaep" path="res://entities/enemies/enemy-bomber/hurt_state.gd" id="7_1hxrf"]
+[ext_resource type="Script" uid="uid://bbmt3e6gc484p" path="res://entities/enemies/enemy-bomber/explode_state.gd" id="8_xtb3p"]
+
+[sub_resource type="Gradient" id="Gradient_8gs3j"]
+offsets = PackedFloat32Array(0, 0.48923078, 1)
+colors = PackedColorArray(0.5529412, 0.17254902, 0.17254902, 1, 0.59986424, 0.0338479, 0.033846572, 0.96615386, 0.6, 0.03529412, 0.03529412, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i8hcw"]
+gradient = SubResource("Gradient_8gs3j")
+
+[sub_resource type="Curve" id="Curve_1hxrf"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xtb3p"]
+curve = SubResource("Curve_1hxrf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_570wq"]
+particle_flag_disable_z = true
+gravity = Vector3(0, -98, 0)
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_xtb3p")
+scale_over_velocity_min = 6.29
+scale_over_velocity_max = 31.449999
+color_ramp = SubResource("GradientTexture1D_i8hcw")
+turbulence_enabled = true
+turbulence_noise_strength = 5.3
+turbulence_noise_speed_random = 4.0
+turbulence_initial_displacement_min = 17.800001
+turbulence_initial_displacement_max = 17.800001
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n4h34"]
+resource_local_to_scene = true
+shader = ExtResource("2_570wq")
+shader_parameter/white_progress = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_570wq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_8gs3j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_i8hcw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_1hxrf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_xtb3p")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n4h34"]
+radius = 14.035668
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_570wq"]
+radius = 13.0
+height = 48.0
+
+[node name="Enemy-Bomber" type="CharacterBody2D" unique_id=1083296973 node_paths=PackedStringArray("explodeState", "navAgent", "sprite", "hitbox", "trail", "stateMachine", "defaultState", "hurtState")]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("1_8gs3j")
+explodeState = NodePath("LimboHSM/ExplodeState")
+navAgent = NodePath("NavigationAgent2D")
+score_value = 8
+sprite = NodePath("Sprite")
+hitbox = NodePath("HitboxContainer")
+trail = NodePath("Trail")
+stateMachine = NodePath("LimboHSM")
+defaultState = NodePath("LimboHSM/DefaultState")
+hurtState = NodePath("LimboHSM/HurtState")
+metadata/_custom_type_script = "uid://juoyvqso43pp"
+
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=2076399836]
+process_material = SubResource("ParticleProcessMaterial_570wq")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1138005343]
+material = SubResource("ShaderMaterial_n4h34")
+sprite_frames = SubResource("SpriteFrames_570wq")
+autoplay = "default"
+frame_progress = 0.060475416
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1364354631]
+position = Vector2(0, 7)
+shape = SubResource("CircleShape2D_n4h34")
+debug_color = Color(1, 1, 1, 0.41960785)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1699386246]
+
+[node name="LimboHSM" type="LimboHSM" parent="." unique_id=2071271785]
+
+[node name="DefaultState" type="LimboState" parent="LimboHSM" unique_id=1541464959]
+script = ExtResource("6_i8hcw")
+
+[node name="HurtState" type="LimboState" parent="LimboHSM" unique_id=397771928]
+script = ExtResource("7_1hxrf")
+
+[node name="ExplodeState" type="LimboState" parent="LimboHSM" unique_id=1336638177]
+script = ExtResource("8_xtb3p")
+
+[node name="HitboxContainer" type="Area2D" parent="." unique_id=261051251]
+collision_layer = 2
+collision_mask = 4
+
+[node name="Hitobx" type="CollisionShape2D" parent="HitboxContainer" unique_id=560473391]
+shape = SubResource("CapsuleShape2D_570wq")
+debug_color = Color(0.99215686, 0.003921569, 0, 0.41960785)

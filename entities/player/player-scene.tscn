@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://bf3k2ul4o5lnx"]
+
+[ext_resource type="Script" uid="uid://dp47dfcp3xwis" path="res://entities/player/player-script.gd" id="1_p1n4p"]
+[ext_resource type="Texture2D" uid="uid://kxlexgdfyymh" path="res://assets/spaceships/spaceship-red.png" id="2_2cy64"]
+[ext_resource type="Shader" uid="uid://dcnjfcki0qgvu" path="res://misc/effects/hit_flash.tres" id="2_hnqm2"]
+[ext_resource type="Script" uid="uid://8yalcccxdua3" path="res://entities/player/hurt_state.gd" id="4_ptymj"]
+[ext_resource type="Script" uid="uid://bjxviu3ndyb3s" path="res://entities/player/default_state.gd" id="5_od4av"]
+
+[sub_resource type="Animation" id="Animation_hnqm2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_depk6"]
+resource_name = "hit_flash"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ptymj"]
+_data = {
+&"RESET": SubResource("Animation_hnqm2"),
+&"hit_flash": SubResource("Animation_depk6")
+}
+
+[sub_resource type="Gradient" id="Gradient_2cy64"]
+offsets = PackedFloat32Array(0, 0.55279505, 1)
+colors = PackedColorArray(1, 1, 0, 1, 1, 0.39607844, 0.07058824, 1, 1, 0.23529412, 0.07058824, 0.5019608)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hnqm2"]
+gradient = SubResource("Gradient_2cy64")
+
+[sub_resource type="Curve" id="Curve_depk6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ptymj"]
+curve = SubResource("Curve_depk6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_od4av"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 98, 0)
+scale_min = 6.0
+scale_max = 8.0
+scale_curve = SubResource("CurveTexture_ptymj")
+color_ramp = SubResource("GradientTexture1D_hnqm2")
+turbulence_enabled = true
+turbulence_noise_strength = 10.54
+turbulence_noise_scale = 1.716
+turbulence_noise_speed_random = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2cy64"]
+radius = 16.124516
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_depk6"]
+shader = ExtResource("2_hnqm2")
+shader_parameter/enabled = false
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hnqm2"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_2cy64")
+}],
+"loop": true,
+"name": &"spaceship-red-default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hnqm2"]
+
+[node name="Player" type="CharacterBody2D" unique_id=1661014266 node_paths=PackedStringArray("sprite", "hitFlash", "hitbox", "stateMachine", "defaultState", "hurtState")]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("1_p1n4p")
+sprite = NodePath("sprite")
+hitFlash = NodePath("HitFlash")
+hitbox = NodePath("HitboxContainer")
+stateMachine = NodePath("LimboHSM")
+defaultState = NodePath("LimboHSM/DefaultState")
+hurtState = NodePath("LimboHSM/HurtState")
+metadata/_custom_type_script = "uid://v22yov37i0wh"
+
+[node name="HitFlash" type="AnimationPlayer" parent="." unique_id=1236504782]
+libraries/ = SubResource("AnimationLibrary_ptymj")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=784542271]
+position = Vector2(0, 6.035)
+amount = 50
+lifetime = 2.0999999999999996
+speed_scale = 2.5
+fixed_fps = 24
+process_material = SubResource("ParticleProcessMaterial_od4av")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1333770361]
+shape = SubResource("CircleShape2D_2cy64")
+debug_color = Color(1, 1, 1, 0.41960785)
+
+[node name="sprite" type="AnimatedSprite2D" parent="." unique_id=1548307079]
+texture_filter = 1
+material = SubResource("ShaderMaterial_depk6")
+sprite_frames = SubResource("SpriteFrames_hnqm2")
+animation = &"spaceship-red-default"
+
+[node name="HitboxContainer" type="Area2D" parent="." unique_id=1651843755]
+collision_mask = 32
+
+[node name="Hitbox" type="CollisionShape2D" parent="HitboxContainer" unique_id=1172698764]
+shape = SubResource("CircleShape2D_hnqm2")
+debug_color = Color(0.9993934, 0, 0.12844995, 0.41960785)
+
+[node name="LimboHSM" type="LimboHSM" parent="." unique_id=2110060485]
+
+[node name="HurtState" type="LimboState" parent="LimboHSM" unique_id=1226941397]
+script = ExtResource("4_ptymj")
+
+[node name="DefaultState" type="LimboState" parent="LimboHSM" unique_id=349286509]
+script = ExtResource("5_od4av")
